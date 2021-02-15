@@ -1,0 +1,297 @@
+openapi: 3.0.1
+info:
+  title: Mon petit placement Unofficial API
+  description: This openapi specification file describe the available endpoints for the API of Mon petit placement.
+    This API is used by the official MPP web application to communicate with the MPP backend.
+    Mon petit placement does not provide any support or documentation for this API.
+    This file is the result of a reverse-engineering work.
+    **Use it at your own risks**.
+  contact:
+    name: Guillaume Kergreis
+    email: guillaume.kergreis@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Mon petit placement
+  url: https://www.monpetitplacement.fr/fr/affiliate/sea?c=KERGREISMPP
+
+servers:
+  - url: https://api.monpetitplacement.fr
+tags:
+  - name: authentication
+  - name: user
+  - name: kyc
+  - name: account
+  - name: product
+
+paths:
+  /authentication_token:
+    post:
+      tags:
+        - authentication
+      summary: Authentication to get the Bearer Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        200:
+          description: Returns the Bearer Token and the PHPSESSID used for authorization.
+          headers:
+            'Set-Cookie':
+              schema:
+                type: string
+                example: PHPSESSID=a48e7f6b87c789e3a4c456d9e47fa978; path=/; secure; HttpOnly;
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        401:
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 401
+                message: Invalid credentials.
+
+
+
+
+components:
+  schemas:
+    UserCredentials:
+      type: object
+      description: The user credentials.
+      properties:
+        username:
+          description: The user email.
+          example: example@email.com
+          type: string
+          format: email
+        password:
+          description: The user password.
+          example: Password123
+          type: string
+          format: password
+      required:
+        - username
+        - password
+      example:
+        username: example@email.com
+        password: Password123
+    ApiError:
+      type: object
+      description: Api error response.
+      properties:
+        code:
+          description: The HTTP response status.
+          example: 401
+          type: integer
+          format: int32
+        message:
+          description: The error message.
+          example:
+            - Invalid credentials.
+            - Expired JWT Token.
+            - JWT Token not found.
+          type: string
+      example:
+          code: 401
+          message: Invalid credentials.
+    AuthenticationResponse:
+      type: object
+      description: The authentication success response.
+      properties:
+        token:
+          type: string
+        user:
+          properties:
+            address:
+              type: string
+            address2:
+              type: 'null'
+            affiliateAlreadyClient:
+              type: 'null'
+            affiliateProvider:
+              type: 'null'
+            affiliationAlreadyClientUserCount:
+              type: integer
+            affiliationLevel:
+              type: string
+            affiliationSavingsPercent:
+              type: number
+            affiliationTotalUserCount:
+              type: integer
+            birthCity:
+              type: 'null'
+            birthCountry:
+              type: 'null'
+            birthdate:
+              type: string
+            cgvAccepted:
+              type: boolean
+            city:
+              type: string
+            company:
+              type: 'null'
+            country:
+              type: string
+            createdAt:
+              type: string
+            email:
+              type: string
+            enabled:
+              type: boolean
+            firstname:
+              type: string
+            gender:
+              type: string
+            id:
+              type: integer
+            incomes:
+              type: 'null'
+            investmentAccounts:
+              items:
+                anyOf:
+                  - properties:
+                      createdAt:
+                        type: string
+                      effectiveDate:
+                        type: string
+                      error:
+                        type: 'null'
+                      id:
+                        type: string
+                      nextMonthlyPaymentDate:
+                        type: string
+                      provider:
+                        properties:
+                          createdAt:
+                            type: string
+                          enabled:
+                            type: boolean
+                          id:
+                            type: string
+                          minimumFirstInvestment:
+                            type: string
+                          minimumFirstInvestmentMonthly:
+                            type: string
+                          minimumInvestmentMonthly:
+                            type: string
+                          name:
+                            type: string
+                          position:
+                            type: string
+                          publicationMode:
+                            type: 'null'
+                          publishOn:
+                            type: 'null'
+                          slug:
+                            type: string
+                          unpublishOn:
+                            type: 'null'
+                          updatedAt:
+                            type: string
+                          uuid:
+                            type: string
+                          walletProvider:
+                            items: { }
+                            type: array
+                        type: object
+                      providerContractId:
+                        type: string
+                      providerProjectId:
+                        type: string
+                      reference:
+                        type: string
+                      refusedSource:
+                        type: 'null'
+                      status:
+                        type: string
+                      statusProvider:
+                        type: string
+                      updatedAt:
+                        type: string
+                      uuid:
+                        type: string
+                      watermark:
+                        type: integer
+                      watermarkedAt:
+                        type: 'null'
+                    type: object
+              type: array
+            isAmerican:
+              type: boolean
+            isTest:
+              type: boolean
+            job:
+              type: 'null'
+            language:
+              items: { }
+              type: array
+            lastLogin:
+              type: string
+            lastLoginCountryCode:
+              type: 'null'
+            lastname:
+              type: string
+            lydiaToken:
+              type: 'null'
+            mobile:
+              type: string
+            nationality:
+              type: 'null'
+            nif:
+              type: 'null'
+            notes:
+              type: 'null'
+            onlyNewsletter:
+              type: boolean
+            passwordRequestedAt:
+              type: 'null'
+            phone:
+              type: string
+            registrationSource:
+              type: 'null'
+            roles:
+              items:
+                anyOf:
+                  - type: string
+              type: array
+            taxResidence:
+              type: 'null'
+            trackingToken:
+              type: 'null'
+            universignCertifiedAt:
+              type: 'null'
+            updatedAt:
+              type: string
+            username:
+              type: string
+            uuid:
+              type: string
+            validatedAt:
+              type: string
+            zipcode:
+              type: string
+          type: object
+
+
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [ ]
+  - cookieAuth: [ ]
+
+
